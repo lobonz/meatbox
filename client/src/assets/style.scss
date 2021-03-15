@@ -1,0 +1,188 @@
+//https://bootswatch.com/ 
+
+$font-family-sans-serif: "Public Sans" !default;
+
+$white: rgb(255, 255, 255) !default;
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #6c7d6c !default;
+$gray-700: #4f5467 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+$black: #000 !default;
+
+$blue:    #b70023 !default;
+$indigo: #6610f2 !default;
+$purple: #7015bd !default;
+$pink: #e83e8c !default;
+$red: #ed4040 !default;
+$orange: #fb9678 !default;
+$yellow: #fec107 !default;
+$green: #00c292 !default;
+$teal: #20c997 !default;
+$cyan: #01c0c8 !default;
+//$primary: #ed4040 !default;
+//$primary: #00a0ff !default;
+
+$primary:       $blue !default;
+$secondary:     $gray-200 !default;
+$success:       $green !default;
+$info:          $cyan !default;
+$warning:       $yellow !default;
+$danger:        $red !default;
+$light:         lighten($gray-200, 35%) !default;
+$dark:          $gray-200 !default;
+
+$yiq-contrasted-threshold:  185 !default;
+
+// Body
+
+$body-bg:                   #1f1f1f !default;
+$body-color:                $gray-100 !default;
+
+// Components
+
+$border-radius:               0 !default;
+$border-radius-lg:            0 !default;
+$border-radius-sm:            0 !default;
+
+// Fonts
+
+// stylelint-disable-next-line value-keyword-case
+$font-family-sans-serif:      Lato, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
+
+$text-muted:                  rgba(255, 255, 255, .4) !default;
+
+// Tables
+
+$table-accent-bg:             rgba($white, .05) !default;
+$table-hover-bg:              rgba($white, .075) !default;
+$table-border-color:          rgba($black, .15) !default;
+$table-head-bg:               $light !default;
+$table-dark-bg:               $light !default;
+$table-dark-border-color:     $gray-200 !default;
+$table-dark-color:            $body-bg !default;
+
+// Forms
+
+$input-disabled-bg:                 $gray-100 !default;
+$input-border-color:                transparent !default;
+$input-group-addon-color:           $body-color !default;
+$custom-file-button-color:          $white !default;
+$custom-file-border-color:          $gray-200 !default;
+
+// Dropdowns
+
+$dropdown-bg:                       $gray-600 !default;
+$dropdown-divider-bg:               rgba($black, .15) !default;
+$dropdown-link-color:               $body-color !default;
+$dropdown-link-hover-color:         $dropdown-link-color !default;
+$dropdown-link-hover-bg:            $table-hover-bg !default;
+
+// Navs
+
+$nav-link-disabled-color:           rgba(255, 255, 255, .4) !default;
+$nav-tabs-border-color:             $gray-200 !default;
+$nav-tabs-link-active-color:        $body-color !default;
+$nav-tabs-link-active-border-color: $gray-200 !default;
+
+// Navbar
+
+$navbar-padding-y:                  .25rem !default;
+$navbar-dark-color:                 rgba($white, .75) !default;
+$navbar-dark-hover-color:           $white !default;
+
+// Pagination
+
+$pagination-color:                  $white !default;
+$pagination-bg:                     $gray-200 !default;
+$pagination-border-color:           transparent !default;
+$pagination-hover-color:            $white !default;
+$pagination-hover-bg:               $nav-link-disabled-color !default;
+$pagination-hover-border-color:     $pagination-border-color !default;
+$pagination-disabled-color:         $nav-link-disabled-color !default;
+$pagination-disabled-bg:            $pagination-bg !default;
+$pagination-disabled-border-color:  $pagination-border-color !default;
+
+// Cards
+
+$card-cap-bg:                       $table-hover-bg !default;
+$card-bg:                           $gray-200 !default;
+$card-inner-border-radius:          0 !default;
+
+// Popovers
+
+$popover-bg:                        $gray-200 !default;
+$popover-header-bg:                 $table-hover-bg !default;
+
+// Toasts
+
+$toast-background-color:            $gray-200 !default;
+$toast-border-color:                rgba(0, 0, 0, .2) !default;
+$toast-header-color:                $body-color !default;
+$toast-header-background-color:     $toast-background-color !default;
+$toast-header-border-color:         $toast-border-color !default;
+
+// Modals
+
+$modal-content-bg:                  $gray-200 !default;
+$modal-header-border-color:         rgba(0, 0, 0, .2) !default;
+
+// List group
+
+$list-group-bg:                     $gray-200 !default;
+$list-group-border-color:           transparent !default;
+$list-group-hover-bg:               $nav-link-disabled-color !default;
+$list-group-disabled-color:         $nav-link-disabled-color !default;
+$list-group-action-color:           $white !default;
+$list-group-action-hover-color:     $white !default;
+
+// Breadcrumbs
+
+$breadcrumb-divider-color:          $body-color !default;
+$breadcrumb-active-color:           $body-color !default;
+
+// Code
+
+$pre-color:                         inherit !default;
+
+// Grid containers
+//
+// Define the maximum width of `.container` for different screen sizes.
+
+$container-max-widths: (
+        sm: 720px,
+        md: 960px,
+        lg: 1280px,
+        xl: 90%
+) !default;
+
+.collapsed > .when-open,
+.not-collapsed > .when-closed
+{
+  display: none;
+}
+
+//Fix the outline from upgrade of bootstrap on the span when clicked on
+//to operate the collapse feature
+.collapsed:focus,
+.when-open:focus,
+.collapsed:active,
+.when-open:active,
+.not-collapsed:focus,
+.when-closed:focus,
+.not-collapsed:active,
+.when-closed:active
+{
+  outline: none !important;
+  outline-width: 0px !important;
+}
+
+.pointer{ cursor: pointer; }
+
+@import "bootstrap/scss/bootstrap.scss";
+
+

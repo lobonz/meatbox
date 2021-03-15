@@ -1,0 +1,8 @@
+{
+  "name": "meatbox",
+  "template": "PWA",
+  "isConfigured": {
+    "client": true,
+    "server": true
+  }
+}
