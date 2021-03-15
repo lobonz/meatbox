@@ -3,7 +3,7 @@ A control system for a salumi/charcuteri/koji ageing/growing environment which r
 
 ## WARNING
 Currently not fully working, partial gui functional, basic logging.
-###TODO
+### TODO
 * Integrate Sensors
 * Integrate Relays
 
