@@ -1,4 +1,4 @@
-#WARNING
+## WARNING
 Currently not fully working, partial gui functional, basic logging.
 TODO
 -Integrate Sensors
@@ -11,11 +11,11 @@ A control system for a salumi/charcuteri/koji ageing/growing environment which r
 I'm hacking this together from various tutorials, I am not a programmer by trade so there is likely many things that are not done correctly but always willing to learn.
 Uses Mongo DB Express and Vue 2
 
-#client
+# client
 Front end PWA to interact and control the meatbox
 
-#server
+# server
 API backend for the interface and controller to check the various sensors
 
-#chamber
+# chamber
 A virtual chamber, a server which acts like an insulated chamber which can be heated and cooled, humidified and dehumidified, etc.
