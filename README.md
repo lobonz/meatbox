@@ -60,3 +60,4 @@ sudo reboot
 Thanks to Chris L8's answer here
 [https://askubuntu.com/questions/1230947/gpio-for-raspberry-pi-gpio-group](https://askubuntu.com/questions/1230947/gpio-for-raspberry-pi-gpio-group)
 
+Then we can use https://www.npmjs.com/package/node-dht-sensor as a normal user by adding them to the dialout group.
