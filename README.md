@@ -6,7 +6,7 @@ Currently not fully working, partial gui functional, basic logging.
 ### TODO
 * Integrate Sensors
 * Integrate Relays
-
+* Integrate Camera
 
 ## NOTE
 I'm hacking this together from various tutorials, I am not a programmer by trade so there is likely many things that are not done correctly but always willing to learn.
