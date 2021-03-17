@@ -51,9 +51,12 @@ These relate to Ubuntu 64bit OS for Raspberry Pi
 ### Install pm2
 [https://pm2.keymetrics.io/docs/usage/quick-start/](https://pm2.keymetrics.io/docs/usage/quick-start/)
 
-### Enabling Access to the GPIO pins
+### Enabling non-root access to the GPIO pins
 ```bash
 sudo apt install rpi.gpio-common
 sudo adduser "${USER}" dialout
 sudo reboot
 ```
+Thanks to Chris L8's answer here
+[https://askubuntu.com/questions/1230947/gpio-for-raspberry-pi-gpio-group](https://askubuntu.com/questions/1230947/gpio-for-raspberry-pi-gpio-group)
+
