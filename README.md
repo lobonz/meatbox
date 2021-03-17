@@ -39,6 +39,9 @@ UI on iPhone 6s | UI with menu Open
 These relate to Ubuntu 64bit OS for Raspberry Pi
 64 Bit OS was required to get the latest features in MongoDB
 
+### Install OS
+[https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi#1-overview](https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi#1-overview)
+
 ### Install Mongo
 [https://pimylifeup.com/mongodb-raspberry-pi/](https://pimylifeup.com/mongodb-raspberry-pi/)
 
