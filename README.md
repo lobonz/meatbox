@@ -40,13 +40,13 @@ These relate to Ubuntu 64bit OS for Raspberry Pi
 64 Bit OS was required to get the latest features in MongoDB
 
 ### Install Mongo
-[](https://pimylifeup.com/mongodb-raspberry-pi/)
+[https://pimylifeup.com/mongodb-raspberry-pi/](https://pimylifeup.com/mongodb-raspberry-pi/)
 
 ### Install Node
-[](https://linuxize.com/post/how-to-install-node-js-on-raspberry-pi/)
+[https://linuxize.com/post/how-to-install-node-js-on-raspberry-pi/](https://linuxize.com/post/how-to-install-node-js-on-raspberry-pi/)
 
 ### Install pm2
-[](https://pm2.keymetrics.io/docs/usage/quick-start/)
+[https://pm2.keymetrics.io/docs/usage/quick-start/](https://pm2.keymetrics.io/docs/usage/quick-start/)
 
 ### Enabling Access to the GPIO pins
 ```bash
