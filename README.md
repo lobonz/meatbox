@@ -35,3 +35,22 @@ UI on iPhone 6s | UI with menu Open
 ------------ | -------------
 <img src="https://raw.githubusercontent.com/lobonz/meatbox/main/about/210317Screenshot_1.PNG" width="300" >|<img src="https://raw.githubusercontent.com/lobonz/meatbox/main/about/210317Screenshot_2.PNG" width="300" >
 
+## Installation Notes
+These relate to Ubuntu 64bit OS for Raspberry Pi
+64 Bit OS was required to get the latest features in MongoDB
+
+### Install Mongo
+[](https://pimylifeup.com/mongodb-raspberry-pi/)
+
+### Install Node
+[](https://linuxize.com/post/how-to-install-node-js-on-raspberry-pi/)
+
+### Install pm2
+[](https://pm2.keymetrics.io/docs/usage/quick-start/)
+
+### Enabling Access to the GPIO pins
+```bash
+sudo apt install rpi.gpio-common
+sudo adduser "${USER}" dialout
+sudo reboot
+```
