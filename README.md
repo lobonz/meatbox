@@ -31,6 +31,7 @@ API backend for the interface and controller to check the various sensors
 A virtual chamber, a server which acts like an insulated chamber which can be heated and cooled, humidified and dehumidified, etc.
 
 ## Screenshots Web UI
-<img src="https://raw.githubusercontent.com/lobonz/meatbox/main/about/210317Screenshot_1.PNG" width="300" >
-<img src="https://raw.githubusercontent.com/lobonz/meatbox/main/about/210317Screenshot_2.PNG" width="300" >
+UI on iPhone 6s | UI with menu Open
+------------ | -------------
+<img src="https://raw.githubusercontent.com/lobonz/meatbox/main/about/210317Screenshot_1.PNG" width="300" >|<img src="https://raw.githubusercontent.com/lobonz/meatbox/main/about/210317Screenshot_2.PNG" width="300" >
 
