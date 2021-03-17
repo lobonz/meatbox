@@ -4,9 +4,18 @@ A control system for a salumi/charcuteri/koji ageing/growing environment which r
 ## WARNING
 Currently not fully working, partial gui functional, basic logging.
 ### TODO
-* Integrate Sensors
-* Integrate Relays
-* Integrate Camera
+- [x] Basic Client/Server
+- [x] Basic UI
+- [x] Chamber simulator to simulate sensor data
+- [x] Graphing data
+- [ ] Add indicators and switches to control and show state of sensors
+- [ ] Implement logic to control the chamber environment automatically within the desired parameters
+- [ ] Integrate Sensors
+- [ ] Integrate Relays
+- [ ] Integrate Camera
+- [ ] Track items within the chamber for time and weight
+- [ ] Notifications for when things are ready or go awry
+- [ ] other things I think of
 
 ## NOTE
 I'm hacking this together from various tutorials, I am not a programmer by trade so there is likely many things that are not done correctly but always willing to learn.
