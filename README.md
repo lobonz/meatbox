@@ -8,6 +8,7 @@ Currently not fully working, partial gui functional, basic logging.
 - [x] Basic UI
 - [x] Chamber simulator to simulate sensor data
 - [x] Graphing data
+- [ ] Arduino Controllbox - to monitor sensors and keep the environment within set points
 - [ ] Add indicators and switches to control and show state of sensors
 - [ ] Implement logic to control the chamber environment automatically within the desired parameters
 - [ ] Integrate Sensors
@@ -29,6 +30,10 @@ API backend for the interface and controller to check the various sensors
 
 ## chamber
 A virtual chamber, a server which acts like an insulated chamber which can be heated and cooled, humidified and dehumidified, etc.
+
+## controllbox
+Arduino code to measure sensors and control relays to keep the meatbox environment within setpoints.
+<img src="https://github.com/lobonz/meatbox/blob/main/controllbox/fritzing/controlbox_bb.png" width="700" >
 
 ## Screenshots Web UI
 UI on iPhone 6s | UI with menu Open
