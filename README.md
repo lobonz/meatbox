@@ -1,4 +1,4 @@
-<img src="https://github.com/lobonz/meatbox/blob/main/client/public/img/icons/android-chrome-512x512.png" width="64" >
+<img src="https://github.com/lobonz/meatbox/blob/main/client/public/img/icons/android-chrome-512x512.png" width="128" >
 
 # meatbox
 A control system for a salumi/charcuteri/koji ageing/growing environment which runs on a Raspberry Pi 4
