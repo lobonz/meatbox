@@ -29,3 +29,35 @@ API backend for the interface and controller to check the various sensors
 
 ## chamber
 A virtual chamber, a server which acts like an insulated chamber which can be heated and cooled, humidified and dehumidified, etc.
+
+## Screenshots Web UI
+UI on iPhone 6s | UI with menu Open
+------------ | -------------
+<img src="https://raw.githubusercontent.com/lobonz/meatbox/main/about/210317Screenshot_1.PNG" width="300" >|<img src="https://raw.githubusercontent.com/lobonz/meatbox/main/about/210317Screenshot_2.PNG" width="300" >
+
+## Installation Notes
+These relate to Ubuntu 64bit OS for Raspberry Pi
+64 Bit OS was required to get the latest features in MongoDB
+
+### Install OS
+[https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi#1-overview](https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi#1-overview)
+
+### Install Mongo
+[https://pimylifeup.com/mongodb-raspberry-pi/](https://pimylifeup.com/mongodb-raspberry-pi/)
+
+### Install Node
+[https://linuxize.com/post/how-to-install-node-js-on-raspberry-pi/](https://linuxize.com/post/how-to-install-node-js-on-raspberry-pi/)
+
+### Install pm2
+[https://pm2.keymetrics.io/docs/usage/quick-start/](https://pm2.keymetrics.io/docs/usage/quick-start/)
+
+### Enabling non-root access to the GPIO pins
+```bash
+sudo apt install rpi.gpio-common
+sudo adduser "${USER}" dialout
+sudo reboot
+```
+Thanks to Chris L8's answer here
+[https://askubuntu.com/questions/1230947/gpio-for-raspberry-pi-gpio-group](https://askubuntu.com/questions/1230947/gpio-for-raspberry-pi-gpio-group)
+
+Then we can use https://www.npmjs.com/package/node-dht-sensor as a normal user by adding them to the dialout group.
