@@ -20,7 +20,7 @@ Currently not fully working, partial gui functional, basic logging.
 
 ## NOTE
 I'm hacking this together from various tutorials, I am not a programmer by trade so there is likely many things that are not done correctly but always willing to learn.
-Uses Mongo DB Express and Vue 2
+Uses Mongo DB Express and Vue 2, Arduino Mega
 
 ## client
 Front end PWA to interact and control the meatbox
