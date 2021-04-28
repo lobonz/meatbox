@@ -47,9 +47,13 @@ These relate to Ubuntu 64bit OS for Raspberry Pi OR the development 64bit Raspbe
 64 Bit OS was required to get the latest features in MongoDB
 
 ### Install OS
-[https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi#1-overview](https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi#1-overview)
-OR use the OS image for Raspbery PI 64bit development version from here
+[https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi#1-overview](https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi#1-overview)  
+OR use the OS image for Raspbery PI 64bit development version from here  
 https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-2021-04-09/
+
+### update default username and home directory
+If you dont want the default user to be pi, then you can change it to meatbox :)  
+https://thepihut.com/blogs/raspberry-pi-tutorials/how-to-change-the-default-account-username-and-password
 
 ### Install Mongo
 [https://pimylifeup.com/mongodb-raspberry-pi/](https://pimylifeup.com/mongodb-raspberry-pi/)
