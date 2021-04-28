@@ -43,11 +43,13 @@ UI on iPhone 6s | UI with menu Open
 <img src="https://raw.githubusercontent.com/lobonz/meatbox/main/about/210317Screenshot_1.PNG" width="300" >|<img src="https://raw.githubusercontent.com/lobonz/meatbox/main/about/210317Screenshot_2.PNG" width="300" >
 
 ## Installation Notes
-These relate to Ubuntu 64bit OS for Raspberry Pi
+These relate to Ubuntu 64bit OS for Raspberry Pi OR the development 64bit Raspberry PI OS
 64 Bit OS was required to get the latest features in MongoDB
 
 ### Install OS
 [https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi#1-overview](https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi#1-overview)
+OR use the OS image for Raspbery PI 64bit development version from here
+https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-2021-04-09/
 
 ### Install Mongo
 [https://pimylifeup.com/mongodb-raspberry-pi/](https://pimylifeup.com/mongodb-raspberry-pi/)
