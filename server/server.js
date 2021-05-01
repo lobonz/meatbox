@@ -10,6 +10,7 @@ const fs = require("fs")
 
 const stateService = require('./services/state.service')
 const environmentLogService = require('./services/environmentlog.service')
+const controlBoxService = require('./services/controlbox.service')
 
 var mongoose = require('mongoose');
 
@@ -29,6 +30,17 @@ stateService.readState().then(response => {
   } else {
     logger.error('Could not load state from DB, Please ensure Mongo is running.')
     process.exit(1)
+  }
+})
+
+//controllbox
+controlBoxService.connectControlBox().then(response => {
+  console.log("response")
+  console.log(response)
+  if (response.connected) {
+    logger.info("Control Box Service Started")
+  } else {
+    logger.error('Could not start Control Box Service.')
   }
 })
 

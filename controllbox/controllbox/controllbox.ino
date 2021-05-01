@@ -1,6 +1,16 @@
 #include "ArduinoJson.h"
 
 ///////////////////////////////////////////////
+////    DEBUG - Comment out to stop verbose serial output
+///////////////////////////////////////////////
+//#define DEBUG
+
+///////////////////////////////////////////////
+////    RESET FUNCTION
+///////////////////////////////////////////////
+void(* resetFunc) (void) = 0; //declare reset function @ address 0
+
+///////////////////////////////////////////////
 ////    LOADCELL MOVING AVERAGES
 ///////////////////////////////////////////////
 // Weight is not expected to change suddenly so moving average smooths any errors and help with drift.
@@ -12,16 +22,17 @@ movingAvg avgloadcell_4(30);
 movingAvg avgloadcell_5(30);
 
 ///////////////////////////////////////////////
-////    RELAYS
+////    RELAYS / RELAY PIN NUMBERS
 ///////////////////////////////////////////////
   const int light_relayenable = 22;
-  const int cool_relayenable = 23;
-  const int heat_relayenable = 24;
+  const int cool_relayenable = 24;
+  const int heat_relayenable = 26;
 
-  const int humidify_relayenable = 25;
-  const int dehumidify_relayenable = 26;
-  const int airpump_relayenable = 27;
-  const int circulate_relayenable = 28;
+  const int humidify_relayenable = 28;
+  const int dehumidify_relayenable = 30;
+  const int airpump_relayenable = 32;
+  const int circulate_relayenable = 34;
+  //const int ??_relayenable = 36;
   
 ///////////////////////////////////////////////
 ////    TIMER
@@ -83,11 +94,6 @@ unsigned long t = 0;
 #include "CommandHandler.h"
 CommandHandler<15> SerialCommandHandler;
 
-///////////////////////////////////////////////
-////    DEBUG - Comment out to stop verbose serial output
-///////////////////////////////////////////////
-#define DEBUG
-
 
 /* Arrange your settings in this struct. Ensure that 'checksum' is the */
 /* last item and is an unsigned int. Otherwise, do whatever you like. */
@@ -111,6 +117,9 @@ struct meat_settings {
   long tare_offset_3;
   long tare_offset_4;
   long tare_offset_5;
+
+  int load_check_millis;
+  int temphumidity_millis;
   
   float cycle_delay = 10*1000*60; //10 minutes
 
@@ -132,6 +141,9 @@ struct meat_settings {
   tare_offset_3 = 8409015;
   tare_offset_4 = 8409015;
   tare_offset_5 = 8409015;
+
+  load_check_millis = 60 * 60 * 1000;//every hour
+  temphumidity_millis = 60 * 1000;//every minute
   
   cycle_delay = 10*1000*60; //10 minutes
   
@@ -212,11 +224,6 @@ void defaultState(){
 }
 
 //Command handling
-void Cmd_ListAll(CommandParameter &Parameters)
-{
-  Serial.print(F("OnTime [ms]="));
-  //Serial.println(OnTime);
-}
 
 void Cmd_Unknown()
 {
@@ -224,120 +231,55 @@ void Cmd_Unknown()
   StaticJsonDocument<200> JsonResponse;
   JsonResponse["success"] = false;
   JsonResponse["message"] = "I don't understand";
-  serializeJson(JsonResponse, Serial);
+  serializeJsonPretty(JsonResponse, Serial);
 }
 
-void Cmd_Echo(CommandParameter &Parameters)
+void Cmd_Reset()
+{
+  resetFunc();  //call reset
+}
+
+
+void Cmd_Help(CommandParameter &Parameters)
 {
   // Allocate the JSON document
   StaticJsonDocument<200> JsonResponse;
   JsonResponse["success"] = true;
-  JsonResponse["message"] = Parameters.NextParameter();
-  serializeJson(JsonResponse, Serial);
+
+  JsonObject commands  = JsonResponse.createNestedObject("commands");
+  commands["!set temperaturetarget 10"] = "Sets the Target Temperature";
+  commands["!set temperaturevariance 2"] = "Sets Target +/- Variance";
+  commands["!set humiditytarget 75"] = "Sets the Target Humidity 0-100";
+  commands["!set humidityvariance 5"] = "Sets the Humidity +/- % Variance 0-25";
+  
+  commands["!set light 0"] = "Sets the current light state, on[1] or off[0]";
+  commands["!set cool 0"] = "Sets the current cool state, on[1] or off[0]";
+  commands["!set heat 0"] = "Sets the current heat state, on[1] or off[0]";
+  commands["!set humidify 0"] = "Sets the current humidify state, on[1] or off[0]";
+  commands["!set dehumidify 0"] = "Sets the current dehumidify state, on[1] or off[0]";
+  commands["!set airpump 0"] = "Sets the current airpump state, on[1] or off[0]";
+  commands["!set circulate 0"] = "Sets the current circulate state, on[1] or off[0]";
+  commands["!set isactive 0"] = "Sets the current isactive state, on[1] or off[0]";
+
+  commands["!get light"] = "Gets the current light state, true or false";
+  commands["!get cool"] = "Gets the current cool state, true or false";
+  commands["!get heat"] = "Gets the current heat state, true or false";
+  commands["!get humidify"] = "Gets the current humidify state, true or false";
+  commands["!get dehumidify"] = "Gets the current dehumidify state, true or false";
+  commands["!get airpump"] = "Gets the current airpump state, true or false";
+  commands["!get circulate"] = "Gets the current circulate state, true or false";
+  commands["!get isactive"] = "Gets the current isactive state, true or false";
+  commands["!get resetbox"] = "Resets/Restarts the Box Controller";
+
+  
+//  SerialCommandHandler.AddCommand(F("get"), Cmd_Get);
+//  SerialCommandHandler.AddCommand(F("set"), Cmd_Set);
+
+  commands["!tareloadcell 1"] = "Tare's the given loadcell to Zero";
+  commands["!calibrateloadcell 1 1000"] = "Calibrates the given loadcell with the given known mass, mass is in grams, i.e. calibrate loadcell 1 with 1000g";
+
+  serializeJsonPretty(JsonResponse, Serial);
   Serial.println();
-}
-void Cmd_SetTemperatureTarget(CommandParameter &Parameters)
-{
-  // Allocate the JSON document
-  StaticJsonDocument<200> JsonResponse;
-  
-  float newtemptarget = atof(Parameters.NextParameter());
-  #ifdef DEBUG
-    Serial.println(newtemptarget);
-  #endif
-  if (newtemptarget != 0.00){
-    settings.Data.temperature_target = newtemptarget;
-    
-    JsonResponse["success"] = true;
-    JsonResponse["message"] = "Target Temperature";
-    JsonResponse["target_temp"] = settings.Data.temperature_target;
-    serializeJson(JsonResponse, Serial);
-    Serial.println();
-    settings.Save();
-  }else{
-    JsonResponse["success"] = false;
-    JsonResponse["message"] = "Could Not Set New Temperature Target";
-    serializeJson(JsonResponse, Serial);
-    Serial.println();
-  }
-}
-
-void Cmd_SetTemperatureVariance(CommandParameter &Parameters)
-{
-  // Allocate the JSON document
-  StaticJsonDocument<200> JsonResponse;
-  
-  float newtempvariance = atof(Parameters.NextParameter());
-  #ifdef DEBUG
-    Serial.println(newtempvariance);
-  #endif
-  if (newtempvariance != 0.00){
-    settings.Data.temperature_variance = newtempvariance;
-    
-    JsonResponse["success"] = true;
-    JsonResponse["message"] = "Temperature Variance";
-    JsonResponse["target_temp"] = settings.Data.temperature_variance;
-    serializeJson(JsonResponse, Serial);
-    Serial.println();
-    settings.Save();
-  }else{
-    JsonResponse["success"] = false;
-    JsonResponse["message"] = "Could Not Set New Temperature Variance";
-    serializeJson(JsonResponse, Serial);
-    Serial.println();
-  }
-}
-
-void Cmd_SetHumidityTarget(CommandParameter &Parameters)
-{
-  // Allocate the JSON document
-  StaticJsonDocument<200> JsonResponse;
-  
-  float newhumidity = atof(Parameters.NextParameter());
-  #ifdef DEBUG
-    Serial.println(newhumidity);
-  #endif
-  if (newhumidity != 0.00){
-    settings.Data.humidity_target = newhumidity;
-    
-    JsonResponse["success"] = true;
-    JsonResponse["message"] = "Target Humidity";
-    JsonResponse["target_humidity"] = settings.Data.humidity_target;
-    serializeJson(JsonResponse, Serial);
-    Serial.println();
-    settings.Save();
-  }else{
-    JsonResponse["success"] = false;
-    JsonResponse["message"] = "Could Not Set New Humidity Target";
-    serializeJson(JsonResponse, Serial);
-    Serial.println();
-  }
-}
-
-void Cmd_SetHumidityVariance(CommandParameter &Parameters)
-{
-  // Allocate the JSON document
-  StaticJsonDocument<200> JsonResponse;
-  
-  float newhumidityvariance = atof(Parameters.NextParameter());
-  #ifdef DEBUG
-    Serial.println(newhumidityvariance);
-  #endif
-  if (newhumidityvariance != 0.00){
-    settings.Data.humidity_variance = newhumidityvariance;
-    
-    JsonResponse["success"] = true;
-    JsonResponse["message"] = "Humidity Variance";
-    JsonResponse["target_temp"] = settings.Data.humidity_variance;
-    serializeJson(JsonResponse, Serial);
-    Serial.println();
-    settings.Save();
-  }else{
-    JsonResponse["success"] = false;
-    JsonResponse["message"] = "Could Not Set New Humidity Variance";
-    serializeJson(JsonResponse, Serial);
-    Serial.println();
-  }
 }
 
 void Cmd_Set(CommandParameter &Parameters)
@@ -347,7 +289,7 @@ void Cmd_Set(CommandParameter &Parameters)
   
   //Serial.println(Parameters.NextParameter());
   const char* service = Parameters.NextParameter();
-  int setstate = atoi(Parameters.NextParameter());
+  float setstate = atof(Parameters.NextParameter());
   
   #ifdef DEBUG
   Serial.print("CHECK->");
@@ -355,7 +297,72 @@ void Cmd_Set(CommandParameter &Parameters)
   #endif
   
   JsonResponse["success"] = true;
-  if(strcmp(service, "light") == 0)
+
+  if(strcmp(service, "temperaturetarget") == 0)
+  {
+      JsonResponse["message"] = "Temperature Target";
+
+      #ifdef DEBUG
+        Serial.println(setstate);
+      #endif
+      if (setstate > 0){
+        settings.Data.temperature_target = setstate;
+        JsonResponse["target_temp"] = settings.Data.temperature_target;
+        settings.Save();
+      }else{
+        JsonResponse["success"] = false;
+        JsonResponse["message"] = "Could Not Set New Temperature Target <= 0";
+      }  
+  }
+  else if(strcmp(service, "settemperaturevariance") == 0)
+  {
+      JsonResponse["message"] = "Temperature Variance";
+
+      #ifdef DEBUG
+        Serial.println(setstate);
+      #endif
+      if (setstate > 0){
+        settings.Data.temperature_variance = setstate;
+        JsonResponse["temperature_variance"] = settings.Data.temperature_variance;
+        settings.Save();
+      }else{
+        JsonResponse["success"] = false;
+        JsonResponse["message"] = "Could Not Set New Temperature Variance <= 0";
+      }  
+  }
+  else if(strcmp(service, "sethumiditytarget") == 0)
+  {
+      JsonResponse["message"] = "Humidity Target";
+
+      #ifdef DEBUG
+        Serial.println(setstate);
+      #endif
+      if (setstate > 0 && setstate <= 100){
+        settings.Data.humidity_target = setstate;
+        JsonResponse["humidity_target"] = settings.Data.humidity_target;
+        settings.Save();
+      }else{
+        JsonResponse["success"] = false;
+        JsonResponse["message"] = "Could Not Set New Humidity Target <= 0";
+      }  
+  }
+  else if(strcmp(service, "sethumidityvariance") == 0)
+  {
+      JsonResponse["message"] = "Temperature Target";
+
+      #ifdef DEBUG
+        Serial.println(setstate);
+      #endif
+      if (setstate > 0 && setstate <= 25){ //should be enough
+        settings.Data.humidity_variance = setstate;
+        JsonResponse["target_temp"] = settings.Data.humidity_variance;
+        settings.Save();
+      }else{
+        JsonResponse["success"] = false;
+        JsonResponse["message"] = "Could Not Set New Humidity Variance <= 0";
+      }  
+  }
+  else if(strcmp(service, "light") == 0)
   {
       JsonResponse["message"] = "Light";
       if (setstate == 1){
@@ -455,7 +462,7 @@ void Cmd_Set(CommandParameter &Parameters)
       JsonResponse["message"] = strcat ("No valid service specified: ", service);
   }
   
-  serializeJson(JsonResponse, Serial);
+  serializeJsonPretty(JsonResponse, Serial);
   Serial.println();
 }
 
@@ -530,69 +537,54 @@ void Cmd_Get(CommandParameter &Parameters)
       data.add(state.loadcells[3]);
       data.add(state.loadcells[4]);
   }
+  else if(strcmp(service, "state") == 0)
+  {
+    JsonResponse["temperature"] = state.temperature;
+    JsonResponse["humidity"] = state.humidity;
+    JsonResponse["light"] = state.light;
+    JsonResponse["cool"] = state.cool;
+    JsonResponse["heat"] = state.heat;
+    JsonResponse["humidify"] = state.humidify;
+    JsonResponse["dehumidify"] = state.dehumidify;
+    JsonResponse["airpump"] = state.airpump;
+    JsonResponse["circulate"] = state.circulate;  
+    JsonResponse["isactive"] = state.isactive;
+    
+    JsonArray data = JsonResponse.createNestedArray("loadcells");
+    data.add(state.loadcells[0]);
+    data.add(state.loadcells[1]);
+    data.add(state.loadcells[2]);
+    data.add(state.loadcells[3]);
+    data.add(state.loadcells[4]);
+  }
+  else if(strcmp(service, "settings") == 0)
+  {
+    JsonResponse["temperature_target"] = settings.Data.temperature_target;
+    JsonResponse["temperature_variance"] = settings.Data.temperature_variance;
+    JsonResponse["humidity_target"] = settings.Data.humidity_target;
+    JsonResponse["humidity_variance"] = settings.Data.humidity_variance;
+    JsonResponse["cycle_delay"] = settings.Data.cycle_delay;
+  
+    JsonResponse["load_calibration_1"] = settings.Data.load_calibration_1;
+    JsonResponse["load_calibration_2"] = settings.Data.load_calibration_2;
+    JsonResponse["load_calibration_3"] = settings.Data.load_calibration_3;
+    JsonResponse["load_calibration_4"] = settings.Data.load_calibration_4;
+    JsonResponse["load_calibration_5"] = settings.Data.load_calibration_5;
+    
+    JsonResponse["tare_offset_1"] = settings.Data.tare_offset_1;
+    JsonResponse["tare_offset_2"] = settings.Data.tare_offset_2;
+    JsonResponse["tare_offset_3"] = settings.Data.tare_offset_3;
+    JsonResponse["tare_offset_4"] = settings.Data.tare_offset_4;
+    JsonResponse["tare_offset_5"] = settings.Data.tare_offset_5;
+  }
   else
   {
       JsonResponse["success"] = false;
       JsonResponse["message"] = strcat ("No valid service specified: ", service);
   }
   
-  serializeJson(JsonResponse, Serial);
+  serializeJsonPretty(JsonResponse, Serial);
   Serial.println();
-}
-
-
-void Cmd_GetState(CommandParameter &Parameters)
-{
-  // Allocate the JSON document
-  StaticJsonDocument<200> JsonResponse;
-  JsonResponse["success"] = true;
-
-  JsonResponse["temperature"] = state.temperature;
-  JsonResponse["humidity"] = state.humidity;
-  JsonResponse["light"] = state.light;
-  JsonResponse["cool"] = state.cool;
-  JsonResponse["heat"] = state.heat;
-  JsonResponse["humidify"] = state.humidify;
-  JsonResponse["dehumidify"] = state.dehumidify;
-  JsonResponse["airpump"] = state.airpump;
-  JsonResponse["circulate"] = state.circulate;  
-  JsonResponse["isactive"] = state.isactive;
-  
-  JsonArray data = JsonResponse.createNestedArray("loadcells");
-  data.add(state.loadcells[0]);
-  data.add(state.loadcells[1]);
-  data.add(state.loadcells[2]);
-  data.add(state.loadcells[3]);
-  data.add(state.loadcells[4]);
-
-  serializeJsonPretty(JsonResponse, Serial);
-}
-
-void Cmd_GetSettings(CommandParameter &Parameters)
-{
-  // Allocate the JSON document
-  StaticJsonDocument<200> JsonResponse;
-  JsonResponse["success"] = true;
-
-  JsonResponse["temperature_target"] = settings.Data.temperature_target;
-  JsonResponse["temperature_variance"] = settings.Data.temperature_variance;
-  JsonResponse["humidity_target"] = settings.Data.humidity_target;
-  JsonResponse["humidity_variance"] = settings.Data.humidity_variance;
-  JsonResponse["cycle_delay"] = settings.Data.cycle_delay;
-
-  JsonResponse["load_calibration_1"] = settings.Data.load_calibration_1;
-  JsonResponse["load_calibration_2"] = settings.Data.load_calibration_2;
-  JsonResponse["load_calibration_3"] = settings.Data.load_calibration_3;
-  JsonResponse["load_calibration_4"] = settings.Data.load_calibration_4;
-  JsonResponse["load_calibration_5"] = settings.Data.load_calibration_5;
-  
-  JsonResponse["tare_offset_1"] = settings.Data.tare_offset_1;
-  JsonResponse["tare_offset_2"] = settings.Data.tare_offset_2;
-  JsonResponse["tare_offset_3"] = settings.Data.tare_offset_3;
-  JsonResponse["tare_offset_4"] = settings.Data.tare_offset_4;
-  JsonResponse["tare_offset_5"] = settings.Data.tare_offset_5;
-  
-  serializeJsonPretty(JsonResponse, Serial);
 }
 
 void Cmd_TareLoadCell(CommandParameter &Parameters)
@@ -782,37 +774,39 @@ void setup() {
   ///START TIMER TO CHECK LOADCELLS
   timer.every(15 * 1000, CheckLoadCells);
 
-  //CONFIGURE RELAYS
+  ///START TIMER TO ADJUST ENVIRONMENT
+  timer.every(15 * 1000, CheckLoadCells);
+
+
+  //CONFIGURE RELAYS - SET HIGH TO TURN OFF BEFORE SETTING TO OUTPUT
+  digitalWrite( light_relayenable , HIGH);
   pinMode(light_relayenable, OUTPUT);
+  digitalWrite( cool_relayenable , HIGH);
   pinMode(cool_relayenable, OUTPUT);
+  digitalWrite( heat_relayenable , HIGH);
   pinMode(heat_relayenable, OUTPUT);
+  digitalWrite( humidify_relayenable , HIGH);
   pinMode(humidify_relayenable, OUTPUT);
+  digitalWrite( dehumidify_relayenable , HIGH);
   pinMode(dehumidify_relayenable, OUTPUT);
+  digitalWrite( airpump_relayenable , HIGH);
   pinMode(airpump_relayenable, OUTPUT);
+  digitalWrite( circulate_relayenable , HIGH);
   pinMode(circulate_relayenable, OUTPUT);
 
   ///START SETUP COMMAND HANDLER
-  SerialCommandHandler.AddCommand(F("echo"), Cmd_Echo);
+  SerialCommandHandler.AddCommand(F("help"), Cmd_Help);
   SerialCommandHandler.AddCommand(F("get"), Cmd_Get);
   SerialCommandHandler.AddCommand(F("set"), Cmd_Set);
   //3
-  
-  SerialCommandHandler.AddCommand(F("settemperaturetarget"), Cmd_SetTemperatureTarget);
-  SerialCommandHandler.AddCommand(F("settemperaturevariance"), Cmd_SetTemperatureVariance);
-  SerialCommandHandler.AddCommand(F("sethumiditytarget"), Cmd_SetHumidityTarget);
-  SerialCommandHandler.AddCommand(F("sethumidityvariance"), Cmd_SetHumidityVariance);
-  //7
-  
+ 
   SerialCommandHandler.AddCommand(F("tareloadcell"), Cmd_TareLoadCell);
   SerialCommandHandler.AddCommand(F("calibrateloadcell"), Cmd_CalibrateLoadCell);
-  //9
-  
-  SerialCommandHandler.AddCommand(F("getstate"), Cmd_GetState);
-  SerialCommandHandler.AddCommand(F("getsettings"), Cmd_GetSettings);
-  //11
-  
+  //5
+
+  SerialCommandHandler.AddCommand(F("resetbox"), Cmd_Reset);
   SerialCommandHandler.SetDefaultHandler(Cmd_Unknown);
-  //12
+  //6
   ///END SETUP COMMAND HANDLER
 
   ///START LOAD CELL SETUP
@@ -861,8 +855,12 @@ void setup() {
   if (LoadCell_5.getTareTimeoutFlag()) {
     Serial.println("Timeout, check MCU>HX711 no.5 wiring and pin designations");
   }
+  
+  #ifdef DEBUG
   Serial.print("settings.Data.load_calibration_1: ");
   Serial.println(settings.Data.load_calibration_1);
+  #endif
+  
   LoadCell_1.setCalFactor(settings.Data.load_calibration_1); // user set calibration value (float)
   LoadCell_2.setCalFactor(settings.Data.load_calibration_2); // user set calibration value (float)
   LoadCell_3.setCalFactor(settings.Data.load_calibration_3); // user set calibration value (float)
