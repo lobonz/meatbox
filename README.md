@@ -61,8 +61,66 @@ https://thepihut.com/blogs/raspberry-pi-tutorials/how-to-change-the-default-acco
 ### Install Node
 [https://linuxize.com/post/how-to-install-node-js-on-raspberry-pi/](https://linuxize.com/post/how-to-install-node-js-on-raspberry-pi/)
 
+### Install nginx
+sudo apt install nginx
+
+### Clone the Meatbox repo
+Im installing as user meatbox in /home/meatbox, modify to suit where you install  
+meatbox@meatbox:~/meatbox $ git clone https://github.com/lobonz/meatbox.git
+
+#### update node modules for the client
+meatbox@meatbox:~/meatbox/client $ npm update
+
+### build the client
+npm run build
+
+#### update node modules for the client
+meatbox@meatbox:~/meatbox/server $ npm update
+
+### Configure the nginx webserver
+Added these lines, commenting out any existing matching directives.   
+```
+root /home/meatbox/meatbox/client/dist;
+index index.html
+access_log /var/log/nginx/meatbox.access;
+error_log /var/log/nginx/meatbox.error error;
+```
 ### Install pm2
 [https://pm2.keymetrics.io/docs/usage/quick-start/](https://pm2.keymetrics.io/docs/usage/quick-start/)
+
+#### Start Server with PM2
+```
+meatbox@meatbox:~/meatbox/server $ pm2 start server.js --watch --name meatbox
+```
+
+#### Generate Startup Command - and follow instructions
+```
+meatbox@meatbox:~/meatbox $ pm2 startup
+```
+
+#### You should set the mongo admin password if you want - My meatbox is not online so not worried about security.
+
+#### Make Database - using the mongo commandline
+```
+meatbox@meatbox:~/meatbox $ mongo
+> use meatbox
+switched to db meatbox
+```
+
+#### Make a user to access the meatbox database
+```
+meatbox@meatbox:~/meatbox $ mongo
+> use admin
+switched to db admin
+> db.createUser(
+...   {
+...     user: "meat",
+...     pwd: "charcoal",
+...     roles: [ { role: "readWrite", db: "meatbox" } ]
+...   }
+... );
+
+```
 
 ### Enabling non-root access to the GPIO pins
 ```bash
