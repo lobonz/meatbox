@@ -7,30 +7,21 @@ async function getAllUsers() {
   return await User.find().select('-hash')
 }
 
-// const createUser = (req, res) => {
-//   User.create(req.body)
-//     .then((data) => {
-//       console.log('New User Created!', data);
-//       res.status(201).json(data);
-//     })
-//     .catch((err) => {
-//       if (err.name === 'ValidationError') {
-//         console.error('Error Validating!', err);
-//         res.status(422).json(err);
-//       } else {
-//         console.error(err);
-//         res.status(500).json(err);
-//       }
-//     });
-// };
+async function checkDefaultUser () {
+  this.getAllUsers().then(
+    users => {
+      if (users.length == 0) {
+          this.createUser({name: 'meatbox', username: 'meat', email: 'meat@myhouse.co.nz', password: 'charcoal'})
+        }
+      }
+  ).catch(err => next(err));
+}
 
 async function createUser(userParam) {
   // validate
   if (await User.findOne({ username: userParam.username })) {
       throw 'Username "' + userParam.username + '" is already taken';
   }
-  //add default permissions
-  //userParam.permissions = { dev: false, admin: false, customer: false, customeradmin: false }
 
   const user = new User(userParam);
 
@@ -46,9 +37,6 @@ async function createUser(userParam) {
 
 async function readUser(id) {
   const user = await User.findById(id).select('-hash');
-  //console.log('user.permissions')
-  //console.log(user.permissions)
-
   const token = jwt.sign({ sub: user.id }, process.env.SECRET);
   //console.log(token)
 
@@ -108,4 +96,5 @@ module.exports = {
   updateUser,
   deleteUser,
   authenticateUser,
+  checkDefaultUser
 };

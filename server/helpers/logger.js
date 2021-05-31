@@ -10,7 +10,7 @@ logger.createLogger({
     logger.format.splat(),
     logger.format.json()
   ),
-  defaultMeta: { service: 'MeatFridge' },
+  defaultMeta: { service: 'Meatbox' },
   transports: [
     //
     // - Write to all logs with level `info` and below to `quick-start-combined.log`.
@@ -35,3 +35,12 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = logger;
 
+// { 
+//   error: 0, 
+//   warn: 1, 
+//   info: 2, 
+//   http: 3,
+//   verbose: 4, 
+//   debug: 5, 
+//   silly: 6 
+// }

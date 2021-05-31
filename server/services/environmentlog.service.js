@@ -19,12 +19,12 @@ async function readEnvironmentLog(userParam) {
   var search = {}
   //Likely search will need to be based on dateCreated
   var dt = new Date(); //Milliseconds since 1970 of course
-  var MS_PER_MINUTE = 60000;//milliseonds per secobd
+  var MS_PER_MINUTE = 60000;//milliseonds per second
   var MS_PER_HOUR = MS_PER_MINUTE * 60;//milliseonds per minute
   var MS_PER_DAY = MS_PER_HOUR * 24;//milliseonds per hour
 
   var timespandays = 0;
-  var timespanhours = 2;
+  var timespanhours = 1;
   var timespanminutes = 0;
   var timespan = MS_PER_DAY * timespandays + MS_PER_HOUR * timespanhours + MS_PER_MINUTE * timespanminutes
 

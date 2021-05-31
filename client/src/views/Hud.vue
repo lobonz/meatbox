@@ -84,6 +84,7 @@ export default {
     return {
       parts: [], // docs
       timescaleminutes: 120,
+      movingaverageminutes: 10,
       temperatures: [],
       temperatureaverage: 0,
       humiditys: [],
@@ -91,7 +92,8 @@ export default {
       labels: [],
       loaded: false,
       state: {},
-      stateloaded: false
+      stateloaded: false,
+      limit: 10
     };
   },
   mounted() {
@@ -116,12 +118,22 @@ export default {
         search: search
       });
 
-      this.temperatures = response.data.map(doc => doc.temperature);
+      //this.temperatures = response.data.map(doc => doc.temperature);
+      this.temperatures = this.movingAvg(
+        response.data.map(doc => doc.temperature),
+        this.movingaverageminutes
+      );
+
       this.temperatureaverage = this.average(
         this.temperatures,
         this.timescaleminutes
       );
-      this.humiditys = response.data.map(doc => doc.humidity * 100);
+      //this.humiditys = response.data.map(doc => doc.humidity * 100);
+      this.humiditys = this.movingAvg(
+        response.data.map(doc => doc.humidity * 100),
+        this.movingaverageminutes
+      );
+
       this.humidityaverage = this.average(
         this.humiditys,
         this.timescaleminutes
